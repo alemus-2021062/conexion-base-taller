@@ -1,11 +1,12 @@
 
+
 const {Router} = require('express');
-const {getUsuarios, postUsuarios, putUsuarios, deleteUsuarios} = require('../controllers/categoria');
+const { getCategorias, postCategorias, putCategorias, deleteCategorias } = require('../controllers/categoria')
 const router = Router();
 
-router.get('/mostrar', getUsuarios);
-router.post('/agregar', postUsuarios);
-router.put('editar/:id', putUsuarios);
-router.delete('eliminar/:id', deleteUsuarios);
+router.get('/mostrar', getCategorias)
+router.post('/agregar', postCategorias)
+router.put('/editar/:id', putCategorias)
+router.delete('/eliminar/:id', deleteCategorias)
 
 module.exports = router;
