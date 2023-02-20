@@ -1,7 +1,8 @@
 const categoria = require('../models/categoria');
 const Role = require('../models/role');
 const Usuario = require('../models/usuario');
-const Categoria = require('../models/categoria')
+const Categoria = require('../models/categoria');
+const Producto = require('../models/producto');
 
 //Este archivo maneja validaciones personalizadas
 
@@ -51,11 +52,23 @@ const existeCategoriaPorId = async(id) => {
 
 }
 
+const existeProductoPorId = async(id) => {
+
+    //Verificar si el ID existe
+    const existeProducto = await Producto.findById(id);
+
+    if ( !existeProducto ) {
+        throw new Error(`El id ${ id } no existe en la DB`);
+    }
+
+}
+
 
 
 module.exports = {
     esRoleValido,
     emailExiste,
     existeUsuarioPorId,
-    existeCategoriaPorId
+    existeCategoriaPorId,
+    existeProductoPorId
 }

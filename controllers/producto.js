@@ -3,15 +3,25 @@ const Producto = require('../models/producto')
 
 
 const getProductos = async(req = request, res = response) =>{
+    const query = { estado: true };
+
+    const listaProductos = await Promise.all([
+        Producto.countDocuments(query),
+        Producto.find(query).populate('usuario', 'nombre')
+        .populate('usuario', 'correo')
+        .populate('categoria','nombre')
+    ]);
+
     res.json({
-        msg: 'Hola mundo get'
-    })
+        msg: 'get Api - Controlador Categorias',
+        listaProductos
+    });
 }
 
 const getProductoPorId = async(req = request, res = response) =>{
-    res.json({
-        msg: 'Hola mundo getById'
-    })
+    const { id } = req.params
+    const productoById = await Producto.findById(id).populate('usuario', 'nombre')
+    res.status(201).json(productoById)
 }
 
 const postProducto = async(req = request, res = response) =>{
@@ -43,17 +53,39 @@ const postProducto = async(req = request, res = response) =>{
 
 const putProducto = async(req = request, res = response) => {
     
-res.json({
-    msg: 'Hola mundo put'
-})
+    const {id} = req.params;
 
+    const{estado, usuario, ...restoData} =req.body;
+
+    if (restoData.nombre) {
+        restoData.nombre = restoData.nombre.toUpperCase();
+        restoData.usuario = req.usuario._id;
+    }
+
+    
+
+    const productoActualizado = await Producto.findByIdAndUpdate(id, restoData, {new: true});
+
+
+    res.status(201).json({
+        msg: 'PUT Controller Producto',
+        id
+    })
    
 }
 
 const deleteProducto = async(req = request, res = response) => {
   
+    const {id} = req.params;
+
+    const productoEliminado = await Producto.findByIdAndDelete(id);
+
+    //const productoEliminado_ = await Producto.findByIdAndUpdate(id, {estado:false}, {new:true});
+
     res.json({
-        msg: 'Hola mundo delete'
+        msg: 'Delete',
+        productoEliminado
+        //productoEliminado_
     })
 }
 
